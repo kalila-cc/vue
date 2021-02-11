@@ -1,0 +1,326 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+        <link rel="stylesheet" href="./index.css">
+    </head>
+    <body>
+        <!-- 文本插值 -->
+        <div id="app">
+            {{ message }}
+        </div>
+        <!-- 动态绑定 -->
+        <div id="app-2">
+            <span v-bind:title="message">
+                悬停一会儿~
+            </span>
+        </div>
+        <!-- 条件渲染 -->
+        <div id="app-3">
+            <p v-if="char == 'A'"> This is A. </p>
+            <p v-else-if="char == 'B'"> This is B. </p>
+            <p v-else> This is C. </p>
+            <!-- input 复用 -->
+            <template v-if="loginType === 'username'">
+                <label> username </label>
+                <input placeholder="Enter your username">
+            </template>
+            <template v-else>
+                <label> email </label>
+                <input placeholder="Enter your email address">
+            </template>
+            <button @click="changeLoginType"> click me to change login type </button>
+            <br>
+            <!-- input 不复用 -->
+            <template v-if="newLoginType === 'username'">
+                <label> username </label>
+                <input placeholder="Enter your username" key="username-input">
+            </template>
+            <template v-else>
+                <label> email </label>
+                <input placeholder="Enter your email address" key="email-input">
+            </template>
+            <button @click="changeNewLoginType"> click me to change new login type </button>
+        </div>
+        <!-- 循环渲染 -->
+        <div id="app-4">
+            <ol>
+                <li v-for="todo in todos" :key="todo.id">
+                    {{ todo.text }}
+                </li>
+            </ol>
+            <ol>
+                <li v-for="(value, name, index) in todos[0]">
+                    key = {{ name }} | value = {{ value }} | index = {{ index }}
+                </li>
+            </ol>
+            <ol>
+                <li v-for="n in 3">
+                    {{ n }}
+                </li>
+            </ol>
+        </div>
+        <!-- 事件监听 -->
+        <div id="app-5">
+            <p> {{message}} </p>
+            <button v-on:click="reverseMessage"> 反转信息 </button>
+        </div>
+        <!-- 双向绑定 -->
+        <div id="app-6">
+            <p> {{message}} </p>
+            <input v-model="message">
+        </div>
+        <!-- 组件模板 -->
+        <div id="app-7">
+            <ol>
+                <todo-item
+                    v-for="item in groceryList"
+                    v-bind:todo="item"
+                    v-bind:key="item.id"
+                >
+                </todo-item>
+            </ol>
+            <div :style="{ fontSize: postFontSize + 'px' }">
+                <blog-post
+                    v-for="post in posts"
+                    v-bind:key="post.id"
+                    v-bind:post="post"
+                    @enlarge-text-1="postFontSize += 1"
+                ></blog-post>
+            </div>
+            <div :style="{ fontSize: postFontSize + 'px' }">
+                <blog-post
+                    v-for="post in posts"
+                    v-bind:key="post.id"
+                    v-bind:post="post"
+                    @enlarge-text-2="postFontSize += $event"
+                ></blog-post>
+            </div>
+            <div :style="{ fontSize: postFontSize + 'px' }">
+                <blog-post
+                    v-for="post in posts"
+                    v-bind:key="post.id"
+                    v-bind:post="post"
+                    @enlarge-text-3="onEnlargeText"
+                ></blog-post>
+            </div>
+            <div>
+                <custom-input v-model="searchText"></custom-input>
+            </div>
+            <!-- 插槽 -->
+            <div>
+                <custom-article :article="article">
+                    <template v-slot:title>
+                        <h1 ref="title"> replaced title </h1>
+                    </template>
+                    <template v-slot:default></template>
+                    <template #note></template>
+                </custom-article>
+            </div>
+        </div>
+        <!-- 渲染一次 -->
+        <div id="app-8">
+            <p v-once> {{message}} </p>
+            <input v-model="message">
+        </div>
+        <!-- 原始 HTML -->
+        <div id="app-9">
+            <p> 原始 HTML : {{ rawHTML }} </p>
+            <p> 这是可以解析的 HTML : <span v-html="rawHTML"></span> </p>
+        </div>
+        <!-- disabled -->
+        <div id="app-10">
+            <button v-bind:disabled="isButtonDisabled"> 你看不到这个按钮的 disabled 属性 </button>
+        </div>
+        <!-- js 解析 -->
+        <div id="app-11">
+            <div> 求和表达式是 : {{ numbers.join('+') }} </div>
+            <div> 现在的时间是 : {{ new Date().toLocaleString() }} </div>
+        </div>
+        <!-- 动态 url -->
+        <div id="app-12">
+            <p>
+                <input v-model="url">
+            </p>
+            <a v-bind:href="url"> 点我看看 </a>
+        </div>
+        <!-- 动态参数 + 缩写 -->
+        <div id="app-13">
+            <p>
+                <input v-model="eventname"/>
+            </p>
+            <a @[eventname]="doSomeThing" :[attrname]="url" target="_blank"> 动态参数 </a>
+        </div>
+        <!-- 计算属性 -->
+        <div id="app-14">
+            <p> Original message: "{{ message }}" </p>
+            <p> Computed reversed message: "{{ reversedMessage }}" </p>
+        </div>
+        <!-- 计算属性的 getter/setter -->
+        <div id="app-15">
+            <p> My name is {{ fullName }}, first name is {{ firstName }}, last name is {{ lastName }} <p>
+        </div>
+        <!-- class -->
+        <div id="app-16">
+            <p class="static" :class="{hasXAttr: hasXAttr, doNotHasXAttr: doNotHasXAttr}"> directive class object </p>
+            <p :class="classObject"> data class object </p>
+            <p :class="computedClassObject"> computed class object </p>
+            <p :class="[classA, classB]"> data class array </p>
+            <p :class="[{C: classC}, classD]"> mixed class array </p>
+        </div>
+        <!-- 模板 class -->
+        <div id="app-17">
+            <template-1 :template-index="templateIndex" class="will-not-be-covered"></template-1>
+        </div>
+        <!-- style -->
+        <div id="app-18">
+            <p :style="styleA"> 这是 颜色为{{ styleA['color'] }} 的文字 </p>
+            <p :style="[styleB, styleC]"> 这是 颜色为{{ styleB['color'] }} 字号为{{ styleC['font-size'] }} 的文字 </p>
+        </div>
+        <!-- 事件监听 -->
+        <div id="app-19">
+            <p @click="counter += 1"> Counter: {{ counter }} </p>
+            <p @click="addSelf"> Counter: {{ counter }} </p>
+            <p @click="say('Hi')"> Say Hi </p>
+            <p @click="warn('danger', $event)"> WARN </p>
+            <!-- 
+                stop: 阻止单击事件继续传播
+                prevent: 提交事件不再重载页面
+                capture: 内部元素触发的事件先在此处理，然后才交由内部元素进行处理
+                self: 只当在 event.target 是当前元素自身时触发处理函数，即事件不是从内部元素触发的
+                once: 点击事件将只会触发一次
+                passive: 事件的默认行为将会立即触发，不要把 .passive 和 .prevent 一起使用，因为 .prevent 将会被忽略
+                修饰符可以串联 / 可以只有修饰符 / 使用修饰符时顺序很重要
+             -->
+            <p @click.stop.prevent="doSomeThing"> Series </p>
+            <!-- 按键码 (enter/tab/delete/esc/space/up/down/left/right) -->
+            <!-- 通过 Vue.config.keyCodes.name = keyCode 自定义按键修饰符别名 -->
+            <!-- 通过 .exact 限定仅当前面出现的按键被按下时才触发 -->
+            <input @keyup.enter="keyCode($event)"/>
+        </div>
+        <!-- 表单输入绑定 -->
+        <div id="app-20">
+            <!-- text 和 textarea 元素使用 value property 和 input 事件 -->
+            <!-- 修饰符 (lazy/number/trim) -->
+            <p> massage: {{ massageInput }} </p>
+            <input placeholder="enter something" v-model="massageInput"></input>
+            <p> massage: {{ massageTextarea }} </p>
+            <textarea placeholder="enter something" v-model.lazy.trim="massageTextarea"></textarea>
+            <p> age: {{ massageInputNumber }} </p>
+            <input placeholder="enter something" v-model.number="massageInputNumber" type="number"></input>
+            <br>
+            <!-- checkbox 和 radio 使用 checked property 和 change 事件 -->
+            <!-- 复选框 -->
+            <input type="checkbox" id="app-20-checkbox" v-model="app20checked">
+            <label for="app-20-checkbox"> {{ app20checked }} </label>
+            <br>
+            <!-- 复选框（数组） -->
+            <input type="checkbox" id="app-20-jack" value="Jack" v-model="checkedNames">
+            <label for="app-20-jack"> Jack </label>
+            <input type="checkbox" id="app-20-john" value="John" v-model="checkedNames">
+            <label for="app-20-john"> John </label>
+            <input type="checkbox" id="app-20-mike" value="Mike" v-model="checkedNames">
+            <label for="app-20-mike"> Mike </label>
+            <br>
+            <span> Checked names: {{ checkedNames }} </span>
+            <br>
+            <!-- 单选按钮 -->
+            <input type="radio" id="app-20-one" value="One" v-model="picked">
+            <label for="app-20-one"> One </label>
+            <br>
+            <input type="radio" id="app-20-two" value="Two" v-model="picked">
+            <label for="app-20-two"> Two </label>
+            <br>
+            <span> Picked: {{ picked }} </span>
+            <br>
+            <!-- select 字段将 value 作为 prop 并将 change 作为事件 -->
+            <select v-model="selected">
+                <option disabled> 单选 </option>
+                <option> A </option>
+                <option> B </option>
+                <option> C </option>
+            </select>
+            <br>
+            <span> Selected: {{ selected }} </span>
+            <br>
+            <select multiple v-model="multipleSelected">
+                <option disabled> 列表 </option>
+                <option v-for="option in options" :value="option.value"> {{ option.text }} </option>
+            </select>
+            <br>
+            <span> Selected: {{ multipleSelected }} </span>
+            <br>
+            <select v-model="selectedObject">
+                <option disabled> 对象 </option>
+                <option v-for="option in options" :value="option"> {{ option.text }} </option>
+            </select>
+            <br>
+            <span> Selected: {{ selectedObject }} </span>
+            <br>
+        </div>
+        <!-- 动画过渡 -->
+        <div id="app-21">
+            <!-- 
+                v-enter：定义进入过渡的开始状态。在元素被插入之前生效，在元素被插入之后的下一帧移除。
+                v-enter-active：定义进入过渡生效时的状态。在整个进入过渡的阶段中应用，在元素被插入之前生效，在过渡/动画完成之后移除。这个类可以被用来定义进入过渡的过程时间，延迟和曲线函数。
+                v-enter-to：2.1.8 版及以上定义进入过渡的结束状态。在元素被插入之后下一帧生效 (与此同时 v-enter 被移除)，在过渡/动画完成之后移除。
+                v-leave：定义离开过渡的开始状态。在离开过渡被触发时立刻生效，下一帧被移除。
+                v-leave-active：定义离开过渡生效时的状态。在整个离开过渡的阶段中应用，在离开过渡被触发时立刻生效，在过渡/动画完成之后移除。这个类可以被用来定义离开过渡的过程时间，延迟和曲线函数。
+                v-leave-to：2.1.8 版及以上定义离开过渡的结束状态。在离开过渡被触发之后下一帧生效 (与此同时 v-leave 被删除)，在过渡/动画完成之后移除。
+             -->
+            <transition name="slide-fade">
+                <p v-if="show1"> {{ msg1 }} </p>
+            </transition>
+            <button @click="show1 = !show1"> 滑动淡入淡出 </button>
+            <br>
+            <transition name="bounce">
+                <p v-if="show2"> {{ msg2 }} </p>
+            </transition>
+            <button @click="show2 = !show2"> 放大缩小 </button>
+            <br>
+            <transition name="fade">
+                <button
+                    class="vue-style-button"
+                    style="position: absolute;"
+                    @click="isOn1 = !isOn1"
+                    :key="isOn1 ? 'on' : 'off'"
+                >
+                    {{ isOn1 ? 'on' : 'off' }}
+                </button>
+            </transition>
+            <p style="margin-top: 50px;"> 随机列表 </p>
+            <transition-group name="flip-list">
+                <li v-for="item in list" :key="item">
+                    {{ item }}
+                </li>
+            </transition-group>
+            <button class="vue-style-button" @click="onShuffleList"> 打乱数组 </button>
+            <br>
+            <transition-group name="flip-list-row">
+                <span class="flip-list-item" v-for="item in rowList" :key="item">
+                    {{ item }}
+                </span>
+            </transition-group>
+            <br>
+            <button class="vue-style-button" @click="onShuffleRowList"> 打乱数组 </button>
+            <button class="vue-style-button" @click="onAddItem"> 添加元素 </button>
+            <button class="vue-style-button" @click="onRemoveItem"> 移除元素 </button>
+            <br>
+            <div>
+                <transition-group name="flip-list" class="matrix">
+                    <div class="matrix-item container" :class="{ isPrimary: isPrimary(item) }" v-for="item in matrix" :key="item">
+                        <div> {{ item }} </div>
+                    </div>
+                </transition-group>
+                <button class="vue-style-button" @click="onShuffleMatrix"> 打乱矩阵 </button>
+            </div>
+        </div>
+        <!-- 自定义指令 -->
+        <div id="app-22">
+            <input type="text" placeholder="自动聚焦" v-focus>
+            <div v-demo:foo.a.b="message"></div>
+        </div>
+        <!-- 引入脚本 -->
+        <script src="./index.js"></script>
+    </body>
+</html>

@@ -1,0 +1,106 @@
+.container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+.vue-style-button {
+    margin: 10px 0;
+    background-color: #41b883;
+    color: white;
+    font-weight: bold;
+    border-radius: 5px;
+    outline: none;
+    border: 0;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.slide-fade-enter-active {
+    transition: all .8s ease-in-out;
+}
+.slide-fade-leave-active {
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to {
+    transform: translateX(10px);
+    opacity: 0;
+}
+.bounce-enter-active {
+    animation: bounce-in .8s;
+}
+.bounce-leave-active {
+    animation: bounce-in .8s reverse;
+}
+@keyframes bounce-in {
+    0% {
+        transform: scale(0);
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+.fade-enter-active {
+    animation: queue-in 1s;
+}
+.fade-leave-active {
+    animation: queue-out 1s;
+}
+@keyframes queue-in {
+    0% {
+        transform: translateX(30px);
+        opacity: 0.0;
+    }
+    100% {
+        opacity: 1.0;
+    }
+}
+@keyframes queue-out {
+    0% {
+        opacity: 1.0;
+    }
+    100% {
+        transform: translateX(-30px);
+        opacity: 0.0;
+    }
+}
+.flip-list-move, .flip-list-row-move {
+    transition: transform 1s;
+}
+.flip-list-item {
+    transition: all 1s;
+    display: inline-block;
+    margin-right: 10px;
+}
+.flip-list-row-enter, .flip-list-row-leave-to {
+    opacity: 0;
+    transform: translateY(30px);
+}
+.flip-list-row-leave-active {
+    position: absolute;
+}
+.matrix {
+    width: 420px;
+    height: 420px;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    background-color: #fff;
+}
+.matrix-item {
+    transition: all .8s;
+    width: 40px;
+    height: 40px;
+    white-space: pre-wrap;
+    border-radius: 5px;
+    font-weight: bold;
+    background-color: #000000;
+    color: white;
+}
+.isPrimary {
+    background-color: #f7971d;
+    color: black;
+}
