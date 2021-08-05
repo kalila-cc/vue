@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title> vue-animation </title>
+  </head>
+  <body>
+    <div id="app">
+      <div
+        class="dial"
+        :style="{
+          'width': (circleRadius * 2) + 'px',
+          'height': (circleRadius * 2) + 'px',
+          'margin': (circleRadius * 0.5) + 'px',
+        }">
+        <div
+          class="hour-hand"
+          :style="{
+            'width': hourHandWidth + 'px',
+            'height': hourHandHeight + 'px',
+            'transform': 'rotate(' + hourDegree + 'deg)',
+            'transition': 'all ' + duration + 's ease',
+            'left': hourX + 'px',
+            'top': hourY + 'px',
+          }">
+        </div>
+        <div
+          class="minute-hand"
+          :style="{
+            'width': minuteHandWidth + 'px',
+            'height': minuteHandHeight + 'px',
+            'transform': 'rotate(' + minuteDegree + 'deg)',
+            'transition': 'all ' + duration + 's ease',
+            'left': minuteX + 'px',
+            'top': minuteY + 'px',
+          }">
+        </div>
+        <div
+          class="second-hand"
+          :style="{
+            'width': secondHandWidth + 'px',
+            'height': secondHandHeight + 'px',
+            'transform': 'rotate(' + secondDegree + 'deg)',
+            'transition': 'all ' + duration + 's ease',
+            'left': secondX + 'px',
+            'top': secondY + 'px',
+          }">
+        </div>
+        <div
+          class="container numbers"
+          :style="{
+            'width': (2 * numbersize) + 'px',
+            'height': (numbersize) + 'px',
+            'font-size': numbersize + 'px',
+            'left': numbersX[index] + 'px',
+            'top': numbersY[index] + 'px',
+          }"
+          v-for="(num, index) in numberCount">
+          <span> {{ num }} </span>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
